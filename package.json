@@ -1,0 +1,32 @@
+{
+  "name": "dialog",
+  "version": "0.0.0",
+  "description": "Dialog view.",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/sailjs/dialog.git"
+  },
+  "bugs": {
+    "url": "http://github.com/sailjs/dialog/issues"
+  },
+  "author": {
+    "name": "Jared Hanson",
+    "email": "jaredhanson@gmail.com",
+    "url": "http://www.jaredhanson.net/"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://www.opensource.org/licenses/MIT"
+    }
+  ],
+  "main": "dialog",
+  "amd": {},
+  "volo": {
+    "dependencies": {
+      "anchor": "github:anchorjs/anchor",
+      "overlay": "github:sailjs/overlay",
+      "view": "github:sailjs/view"
+    }
+  }
+}
