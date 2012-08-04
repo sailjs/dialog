@@ -39,12 +39,14 @@ function(Overlay, View, sail, clazz) {
   };
   
   Dialog.prototype.escapable = function() {
-    var self = this;
-    sail.$(document).on('keydown', function(e) {
+    this._onkeydown = keydown.bind(this);
+    sail.$(document).on('keydown', this._onkeydown);
+    
+    function keydown(e) {
       if (27 != e.which) return true;
-      self.emit('escape');
-      return true;
-    });
+      this.emit('escape');
+      return false;
+    }
   };
   
   Dialog.prototype.show = function() {
@@ -70,6 +72,7 @@ function(Overlay, View, sail, clazz) {
   }
   
   Dialog.prototype.remove = function() {
+    if (this._onkeydown) sail.$(document).off('keydown', this._onkeydown);
     if (this._overlay) this._overlay.remove();
     this.el.remove();
     return this;
