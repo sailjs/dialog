@@ -3,18 +3,16 @@ define(['view',
         'anchor/class'],
 function(View, Overlay, clazz) {
   
-  // TODO: Track active dialog
-  function Dialog(el, options) {
-    options = options || {};
-    
-    Dialog.super_.call(this, el, options);
-    this._init(options);
-  }
-  clazz.inherits(Dialog, View);
+  // TODO: Implement support for effects
+  // TODO: Implement escape key support
   
-  Dialog.prototype._init = function(options) {
-    var el = this.el
-      , self = this;
+  function Dialog(el, options) {
+    Dialog.super_.call(this, el, options);
+    options = options || {};
+    this._autoRemove = options.autoRemove !== undefined ? options.autoRemove : true;
+    
+    var self = this
+      , el = this.el;
     
     el.find('.close').on('click', function(){
       self.emit('close');
@@ -22,40 +20,29 @@ function(View, Overlay, clazz) {
       return false;
     });
   }
-  
-  Dialog.prototype.modal = function(options) {
-    this.overlay(options);
-    return this;
-  };
+  clazz.inherits(Dialog, View);
   
   Dialog.prototype.overlay = function(options) {
     options = options || {};
+    
     var self = this
       , template = options.template || 'overlay';
 
+    this.el.addClass('modal');
     this._overlay = new Overlay(template, options);
     this._overlay.on('hide', function(){
-      self._closedOverlay = true;
-      self.el.removeClass('modal');
+      self._overlay = null;
       self.hide();
     });
-
     return this;
   };
-  
   
   Dialog.prototype.show = function() {
     var el = this.el
       , overlay = this._overlay;
     
     this.emit('show');
-    
-    if (overlay) {
-      overlay.show();
-      el.addClass('modal');
-    }
-    
-    // TODO: Only append elements if they are not already present
+    if (overlay) overlay.show();
     el.appendTo(document.body);
     el.removeClass('hide');
     return this;
@@ -63,17 +50,20 @@ function(View, Overlay, clazz) {
   
   Dialog.prototype.hide = function() {
     var self = this;
-    this.el.hide();
-    
-    if (this._overlay && !this._closedOverlay) this._overlay.hide();
-    
-    // TODO: Add autoRemove option, and respect it with overlay
-    setTimeout(function() {
-      self.el.remove();
-    }, 2000); // FIXME: These timeouts need to be more immediate
-    
+    this.el.addClass('hide');
+    if (this._autoRemove) {
+      setTimeout(function() {
+        self.remove();
+      }, 10);
+    }
     return this;
   }
+  
+  Dialog.prototype.remove = function() {
+    if (this._overlay) this._overlay.remove();
+    this.el.remove();
+    return this;
+  };
   
   return Dialog;
 });
