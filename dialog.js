@@ -62,6 +62,7 @@ function(Overlay, View, sail, clazz) {
   
   Dialog.prototype.hide = function() {
     var self = this;
+    this.emit('hide');
     this.el.addClass('hide');
     if (this._autoRemove) {
       setTimeout(function() {
