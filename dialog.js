@@ -1,10 +1,10 @@
-define(['view',
-        'overlay',
+define(['overlay',
+        'view',
+        'sail',
         'anchor/class'],
-function(View, Overlay, clazz) {
+function(Overlay, View, sail, clazz) {
   
-  // TODO: Implement support for effects
-  // TODO: Implement escape key support
+  // TODO: Implement support for effects.
   
   function Dialog(el, options) {
     Dialog.super_.call(this, el, options);
@@ -19,6 +19,7 @@ function(View, Overlay, clazz) {
       self.hide();
       return false;
     });
+    this.on('escape', this.hide.bind(this));
   }
   clazz.inherits(Dialog, View);
   
@@ -35,6 +36,15 @@ function(View, Overlay, clazz) {
       self.hide();
     });
     return this;
+  };
+  
+  Dialog.prototype.escapable = function() {
+    var self = this;
+    sail.$(document).on('keydown', function(e) {
+      if (27 != e.which) return true;
+      self.emit('escape');
+      return true;
+    });
   };
   
   Dialog.prototype.show = function() {
