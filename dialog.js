@@ -9,6 +9,7 @@ function(Overlay, View, sail, clazz) {
   function Dialog(el, options) {
     Dialog.super_.call(this, el, options);
     options = options || {};
+    this._cselector = options.contentSelector || 'body';
     this._autoRemove = options.autoRemove !== undefined ? options.autoRemove : true;
     
     var self = this
@@ -71,6 +72,11 @@ function(Overlay, View, sail, clazz) {
     }
     return this;
   }
+  
+  Dialog.prototype.content = function(el) {
+    this.el.find(this._cselector).empty().append(el);
+    return this;
+  };
   
   Dialog.prototype.remove = function() {
     if (this._onkeydown) sail.$(document).off('keydown', this._onkeydown);
