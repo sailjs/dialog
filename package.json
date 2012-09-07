@@ -23,10 +23,12 @@
   "main": "dialog",
   "amd": {},
   "volo": {
+    "baseUrl": "vendor",
     "dependencies": {
-      "anchor": "github:anchorjs/anchor",
-      "overlay": "github:sailjs/overlay",
-      "view": "github:sailjs/view"
+      "class": "github:anchorjs/class/master",
+      "sail": "github:sailjs/sail/master",
+      "view": "github:sailjs/view/master",
+      "overlay": "github:sailjs/overlay/master"
     }
   }
 }

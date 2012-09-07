@@ -1,8 +1,8 @@
 define(['overlay',
         'view',
-        'sail',
-        'anchor/class'],
-function(Overlay, View, sail, clazz) {
+        'class',
+        'sail'],
+function(Overlay, View, clazz, sail) {
   
   // TODO: Implement support for effects.
   
