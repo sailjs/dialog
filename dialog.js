@@ -23,6 +23,11 @@ function(Overlay, View, clazz, sail) {
   }
   clazz.inherits(Dialog, View);
   
+  Dialog.prototype.content = function(el) {
+    this.el.find(this._csel).empty().append(el);
+    return this;
+  };
+  
   Dialog.prototype.overlay = function(options) {
     options = options || {};
     var self = this
@@ -69,12 +74,8 @@ function(Overlay, View, clazz, sail) {
     return this;
   }
   
-  Dialog.prototype.content = function(el) {
-    this.el.find(this._csel).empty().append(el);
-    return this;
-  };
-  
   Dialog.prototype.remove = function() {
+    if (this._onkeydown) sail.$(document).off('keydown', this._onkeydown);
     if (this._overlay) this._overlay.remove();
     this.el.remove();
     return this;
