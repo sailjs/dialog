@@ -9,7 +9,7 @@ function(Overlay, View, clazz, sail) {
   function Dialog(el, options) {
     options = options || {};
     Dialog.super_.call(this, el, options);
-    this._csel = options.contentSelector || '.body';
+    this._bodySel = options.bodySelector || options.contentSelector || '.body';
     this._autoRemove = options.autoRemove !== undefined ? options.autoRemove : true;
     
     var self = this
@@ -19,23 +19,25 @@ function(Overlay, View, clazz, sail) {
       self.hide();
       return false;
     });
-    this.on('escape', this.hide.bind(this));
+    this.on('escape', this.hide.bind(this, true));
   }
   clazz.inherits(Dialog, View);
   
+  Dialog.prototype.body =
   Dialog.prototype.content = function(el) {
-    this.el.find(this._csel).empty().append(el);
+    this.el.find(this._bodySel).empty().append(el);
     return this;
   };
   
   Dialog.prototype.overlay = function(options) {
     options = options || {};
+    options.autoRemove = this._autoRemove;
     var self = this
       , template = options.template || 'overlay';
     this.el.addClass('modal');
     this._overlay = new Overlay(template, options);
     this._overlay.on('hide', function(){
-      self._overlay = null;
+      if (this._autoRemove) self._overlay = null;
       self.hide();
     });
     return this;
@@ -43,7 +45,6 @@ function(Overlay, View, clazz, sail) {
   
   Dialog.prototype.escapable = function() {
     this._onkeydown = keydown.bind(this);
-    sail.$(document).on('keydown', this._onkeydown);
     
     function keydown(e) {
       if (27 != e.which) return true;
@@ -56,15 +57,19 @@ function(Overlay, View, clazz, sail) {
     var el = this.el
       , overlay = this._overlay;
     this.emit('show');
+    if (this._onkeydown) sail.$(document).on('keydown', this._onkeydown);
     if (overlay) overlay.show();
     el.appendTo(document.body);
     el.removeClass('hide');
     return this;
   }
   
-  Dialog.prototype.hide = function() {
+  Dialog.prototype.hide = function(esc) {
+    var overlay = this._overlay;
     this.emit('hide');
+    if (this._onkeydown) sail.$(document).off('keydown', this._onkeydown);
     this.el.addClass('hide');
+    if (esc && overlay) overlay.hide();
     if (this._autoRemove) {
       var self = this;
       setTimeout(function() {
@@ -75,7 +80,6 @@ function(Overlay, View, clazz, sail) {
   }
   
   Dialog.prototype.remove = function() {
-    if (this._onkeydown) sail.$(document).off('keydown', this._onkeydown);
     if (this._overlay) this._overlay.remove();
     this.el.remove();
     return this;
