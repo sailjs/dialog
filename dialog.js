@@ -1,8 +1,8 @@
 define(['overlay',
         'view',
-        'class',
-        'render'],
-function(Overlay, View, clazz, sail) {
+        'render',
+        'class'],
+function(Overlay, View, render, clazz) {
   
   // TODO: Implement support for effects.
   
@@ -57,7 +57,7 @@ function(Overlay, View, clazz, sail) {
     var el = this.el
       , overlay = this._overlay;
     this.emit('show');
-    if (this._onkeydown) sail.$(document).on('keydown', this._onkeydown);
+    if (this._onkeydown) render.$(document).on('keydown', this._onkeydown);
     if (overlay) overlay.show();
     el.appendTo(document.body);
     el.removeClass('hide');
@@ -67,7 +67,7 @@ function(Overlay, View, clazz, sail) {
   Dialog.prototype.hide = function(esc) {
     var overlay = this._overlay;
     this.emit('hide');
-    if (this._onkeydown) sail.$(document).off('keydown', this._onkeydown);
+    if (this._onkeydown) render.$(document).off('keydown', this._onkeydown);
     this.el.addClass('hide');
     if (esc && overlay) overlay.hide();
     if (this._autoRemove) {
