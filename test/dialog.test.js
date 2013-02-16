@@ -1,7 +1,5 @@
-define(['dialog/dialog',
-        'chai'],
-function(Dialog, chai) {
-  var expect = chai.expect;
+define(['dialog'],
+function(Dialog) {
 
   describe("dialog", function() {
     
