@@ -37,7 +37,7 @@ function(Overlay, View, render, clazz) {
     this.el.addClass('modal');
     this._overlay = new Overlay(template, options);
     this._overlay.on('hide', function(){
-      if (this._autoRemove) self._overlay = null;
+      if (self._autoRemove) self._overlay = null;
       self.hide();
     });
     return this;
@@ -74,6 +74,7 @@ function(Overlay, View, render, clazz) {
       var self = this;
       setTimeout(function() {
         self.remove();
+        self.dispose();
       }, 10);
     }
     return this;
@@ -81,8 +82,7 @@ function(Overlay, View, render, clazz) {
   
   Dialog.prototype.remove = function() {
     if (this._overlay) this._overlay.remove();
-    this.el.remove();
-    return this;
+    return Dialog.super_.prototype.remove.call(this);
   };
   
   return Dialog;
